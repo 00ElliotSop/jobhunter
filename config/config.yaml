@@ -1,0 +1,298 @@
+# ============================================================
+# JOBHUNTER CONFIG — Edit this file to control everything
+# ============================================================
+
+# ── YOUR PROFILE ────────────────────────────────────────────
+profile:
+  name: "ElliotSop"
+  email: "your@email.com"
+  phone: "+1-XXX-XXX-XXXX"
+  location: "Toronto, Ontario, Canada"
+  willing_to_relocate: true
+  work_authorization:
+    canada: true
+    usa: true          # TN visa eligible at border with offer letter
+    tn_visa_eligible: true
+
+  resume_path: "./data/resume.pdf"   # drop your resume here
+  linkedin_url: "https://www.linkedin.com/in/padeshina/"
+  github_url: "https://github.com/00ElliotSop"
+
+# ── JOB SEARCH TARGETS ──────────────────────────────────────
+# This is the section you share publicly on GitHub/LinkedIn.
+# Anyone can clone this repo and swap in their own targets.
+search:
+  # Primary job titles to search (order = priority)
+  titles:
+    - "Penetration Tester"
+    - "Offensive Security Engineer"
+    - "Red Team Operator"
+    - "Red Team Engineer"
+    - "Security Researcher"
+    - "Vulnerability Researcher"
+    - "Application Security Engineer"
+    - "Cybersecurity Consultant"
+    - "Security Engineer"
+    - "Information Security Analyst"   # only if cybersec-focused
+
+  # Hard filters — job MUST contain at least one of these
+  required_keywords:
+    - "penetration testing"
+    - "pentest"
+    - "offensive security"
+    - "red team"
+    - "vulnerability assessment"
+    - "exploit"
+    - "ethical hacking"
+    - "security assessment"
+    - "OSCP"
+    - "CEH"
+
+  # Blocklist — auto-reject jobs containing ANY of these
+  blocked_keywords:
+    - "business analyst"
+    - "data analyst"
+    - "project manager"
+    - "scrum master"
+    - "helpdesk"
+    - "help desk"
+    - "IT support"
+    - "desktop support"
+    - "NOC"
+    - "SOC analyst"          # remove if you want SOC roles
+    - "compliance analyst"
+    - "GRC analyst"
+    - "cleared only"          # remove if you get clearance
+    - "TS/SCI"                # US top secret — remove later
+    - "active clearance required"
+
+  # Salary filters (in local currency)
+  salary:
+    min_cad: 80000
+    min_usd: 60000
+    prefer_disclosed: true   # deprioritize jobs hiding salary
+
+  # Work arrangement preferences (rank order)
+  work_type:
+    - "remote"
+    - "hybrid"
+    - "onsite"
+
+  # Regions to search
+  regions:
+    canada:
+      - "Toronto, ON"
+      - "Ottawa, ON"
+      - "Vancouver, BC"
+      - "Remote - Canada"
+    usa:
+      - "Remote - USA"
+      - "New York, NY"
+      - "Washington, DC"
+      - "San Francisco, CA"
+      - "Austin, TX"
+      - "Chicago, IL"
+
+  # Experience level
+  experience_level:
+    - "mid-level"
+    - "senior"
+    - "entry-level"   # remove if you're past entry
+
+# ── SCORING WEIGHTS ──────────────────────────────────────────
+# Controls how jobs are ranked. Total doesn't need to = 100.
+scoring:
+  title_match: 30          # how closely title matches your targets
+  required_keyword_hits: 25 # how many required_keywords appear in JD
+  salary_disclosed: 10      # bonus if salary is listed
+  remote_work: 15           # bonus for remote/hybrid
+  company_reputation: 10    # pulls Glassdoor rating if available
+  cert_mentioned: 10        # OSCP/CEH/etc mentioned in JD
+
+  # Minimum score to trigger email notification (0-100)
+  notify_threshold: 65
+
+  # Minimum score to be saved to DB at all
+  save_threshold: 40
+
+# ── JOB SITES ───────────────────────────────────────────────
+# Set enabled: true/false to toggle any source
+# Add new sites by following the pattern below
+sources:
+  # ── FREE APIs (no scraping, most reliable) ──
+  - name: "USAJobs"
+    type: "api"
+    enabled: true
+    url: "https://data.usajobs.gov/api/search"
+    region: "usa"
+    notes: "Federal jobs. Register free API key at usajobs.gov"
+    api_key_env: "USAJOBS_API_KEY"    # set in .env
+
+  - name: "Adzuna_CA"
+    type: "api"
+    enabled: true
+    url: "https://api.adzuna.com/v1/api/jobs/ca/search"
+    region: "canada"
+    notes: "Free API. Register at developer.adzuna.com"
+    api_key_env: "ADZUNA_API_KEY"
+
+  - name: "Adzuna_US"
+    type: "api"
+    enabled: true
+    url: "https://api.adzuna.com/v1/api/jobs/us/search"
+    region: "usa"
+    api_key_env: "ADZUNA_API_KEY"
+
+  - name: "RemoteOK"
+    type: "api"
+    enabled: true
+    url: "https://remoteok.com/api"
+    region: "remote"
+    notes: "No key needed. Remote jobs only."
+
+  - name: "JobBank_Canada"
+    type: "api"
+    enabled: true
+    url: "https://www.jobbank.gc.ca/jobsearch/jobsearch"
+    region: "canada"
+    notes: "Canada federal job board. No key needed."
+
+  # ── SCRAPERS (Playwright headless browser) ──
+  - name: "LinkedIn"
+    type: "scraper"
+    enabled: true
+    url: "https://www.linkedin.com/jobs/search/"
+    region: "both"
+    requires_login: true
+    login_env: ["LINKEDIN_EMAIL", "LINKEDIN_PASSWORD"]
+    notes: "Scrapes Easy Apply jobs. Login required."
+
+  - name: "Indeed_CA"
+    type: "scraper"
+    enabled: true
+    url: "https://ca.indeed.com/jobs"
+    region: "canada"
+    requires_login: false
+
+  - name: "Indeed_US"
+    type: "scraper"
+    enabled: true
+    url: "https://www.indeed.com/jobs"
+    region: "usa"
+    requires_login: false
+
+  - name: "Dice"
+    type: "scraper"
+    enabled: true
+    url: "https://www.dice.com/jobs"
+    region: "usa"
+    notes: "Best US tech/security job board."
+    requires_login: false
+
+  - name: "CyberSecJobs"
+    type: "scraper"
+    enabled: true
+    url: "https://www.cybersecjobs.com"
+    region: "usa"
+    requires_login: false
+
+  - name: "InfoSec_Jobs"
+    type: "scraper"
+    enabled: true
+    url: "https://infosec-jobs.com"
+    region: "both"
+    requires_login: false
+
+  - name: "WorkingInCanada"
+    type: "scraper"
+    enabled: true
+    url: "https://www.workincanada.com"
+    region: "canada"
+    requires_login: false
+
+  - name: "Wellfound"
+    type: "scraper"
+    enabled: true
+    url: "https://wellfound.com/jobs"
+    region: "both"
+    notes: "Startup jobs. Good remote cybersec roles."
+    requires_login: false
+
+  - name: "Greenhouse"
+    type: "aggregator_scraper"
+    enabled: true
+    url: "https://boards.greenhouse.io"
+    region: "both"
+    notes: "Scrapes company-specific Greenhouse boards"
+    requires_login: false
+
+  - name: "Lever"
+    type: "aggregator_scraper"
+    enabled: true
+    url: "https://jobs.lever.co"
+    region: "both"
+    requires_login: false
+
+  # ── ADD YOUR OWN SITES HERE ──
+  # - name: "MyCustomSite"
+  #   type: "scraper"          # api | scraper | aggregator_scraper
+  #   enabled: true
+  #   url: "https://example.com/jobs"
+  #   region: "both"           # canada | usa | remote | both
+  #   requires_login: false
+
+# ── EMAIL NOTIFICATIONS ──────────────────────────────────────
+notifications:
+  enabled: true
+  smtp_host: "mail.example.com"   # your existing Mailcow
+  smtp_port: 587
+  smtp_user_env: "SMTP_USER"
+  smtp_pass_env: "SMTP_PASS"
+  from_address: "jobhunter@example.com"
+  to_address: "your@email.com"
+
+  # Reply-to-apply: reply to notification email with this word
+  apply_trigger_word: "apply"
+
+  # How often to send digest (in hours)
+  digest_interval_hours: 6
+
+  # Send individual alerts for top matches (score >= 85)
+  instant_alert_threshold: 85
+
+# ── SCHEDULER ───────────────────────────────────────────────
+scheduler:
+  # How often to run scraper cycle (minutes)
+  scrape_interval_minutes: 90
+
+  # Active hours (24h format, your local time)
+  active_hours:
+    start: 7
+    end: 23
+
+  # Days to run
+  active_days:
+    - monday
+    - tuesday
+    - wednesday
+    - thursday
+    - friday
+    - saturday
+    - sunday
+
+# ── APPLICATION SETTINGS ─────────────────────────────────────
+application:
+  # Auto-fill forms but wait for your email reply before submitting
+  mode: "notify_and_wait"   # notify_and_wait | auto_submit | manual
+
+  # How long to wait for your reply before skipping (hours)
+  reply_timeout_hours: 24
+
+  # Generate tailored cover letter for each application
+  generate_cover_letter: true
+
+  # Claude API model for cover letters + scoring
+  claude_model: "claude-sonnet-4-20250514"
+
+  # Max cover letter length (words)
+  cover_letter_max_words: 350
