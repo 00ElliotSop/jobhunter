@@ -107,7 +107,7 @@ mkdir -p data
 ### Step 8 — Test run (single cycle)
 
 ```bash
-source venv/bin/activate
+mkdir -p logs
 python main.py run
 ```
 
